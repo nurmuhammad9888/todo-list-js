@@ -1,0 +1,25 @@
+.wrap,
+.numbers{
+    width: 100%;
+    max-width: 800px;
+}
+.check{
+    width: 15px;
+    height: 15px;
+    margin-left: 10px;
+}
+.list{
+    width: 100%;
+    max-width: 800px;
+}
+
+/* .allcheck {
+    width: 100%;
+    
+}
+.check {
+    width: 100%;
+}
+.anchick {
+    width: 100%;
+} */
