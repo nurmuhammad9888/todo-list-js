@@ -8,21 +8,22 @@ const allCheck = document.querySelector(".allcheck");
 const comlated = document.querySelector(".comlated");
 const uncompleted = document.querySelector(".uncompleted");
 
-let MainFanuc = function(arry,list){
-    list.innerHTML = "";
 
+
+let MainFanuc = function(arry,list){
+    
     let comlate = arry.filter((anchi) =>{
         return anchi.isComplate == false;
     })
     comlated.textContent = comlate.length
-
+    
     let uncomplet = arry.filter((arr) =>{
         return arr.isComplate == true;
     })
     uncompleted.textContent = uncomplet.length;
-
+    
+    list.innerHTML = "";
     allCheck.textContent = arry.length;
-
     arry.forEach((arrays) => {
         let = item = document.createElement("li");
         item.classList.add("d-flex", "align-items-center","mx-auto", "mt-3", "bg-secondary", "justify-content-between","py-2", "rounded")
@@ -66,11 +67,9 @@ let MainFanuc = function(arry,list){
         item.appendChild(div)
     });
 }
-
 const lacal = JSON.parse(window.localStorage.getItem("newArray"))
 const newArray = lacal || [];
 MainFanuc(newArray, elList)
-
 let idTitle = 0;
 let editingId; 
 
@@ -83,17 +82,17 @@ elForm.addEventListener("submit", (evt) => {
             isComplate: false,
         })
         window.localStorage.setItem("newArray", JSON.stringify(newArray))
-        MainFanuc(newArray, elList)
         elForm.reset();    
+        MainFanuc(newArray, elList)
     }
     if(elBtn.textContent === "Edit"){
-        let editt = {
+        let obj = {
             textName:elInput.value,
             id:editingId,
             isComleted:false,
         };
-        let editingIdFoundIndex = newArray.findIndex(todo => todo.id === editt.id);
-        newArray.splice(editingIdFoundIndex, 1, editt)
+        let editingIdFoundIndex = newArray.findIndex(todo => todo.id === obj.id);
+        newArray.splice(editingIdFoundIndex, 1, obj)
         window.localStorage.setItem("newArray", JSON.stringify(newArray))
         MainFanuc(newArray, elList);
         elBtn.textContent = "Add";
@@ -112,10 +111,10 @@ elList.addEventListener("click", (evt) => {
     
     if(evt.target.matches(".idet")){
         let idetId = Number(evt.target.dataset.id);
-        let idetIndex = newArray.find(nur => nur.id === idetId)
+        let idetIndex = newArray.find(todo => todo.id === idetId)
         elInput.value = idetIndex.textName;
-        elBtn.textContent = "Edit";
         editingId = idetIndex.id;
+        elBtn.textContent = "Edit";
     }
     if(evt.target.matches(".chekbbox-check")){
         let checkId = Number(evt.target.dataset.id);
