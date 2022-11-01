@@ -5,23 +5,21 @@ const elBtn = document.querySelector(".btn-js");
 const elList = document.querySelector(".list");
 
 const allCheck = document.querySelector(".allcheck");
-const checkedD = document.querySelector(".checkk");
-const ancheck = document.querySelector(".anchick");
-
-let newArray = [];
-let idTitle = 0;
+const comlated = document.querySelector(".comlated");
+const uncompleted = document.querySelector(".uncompleted");
 
 let MainFanuc = function(arry,list){
     list.innerHTML = "";
-    let isanch = newArray.filter((anchi) =>{
+
+    let comlate = arry.filter((anchi) =>{
         return anchi.isComplate == false;
     })
-    checkedD.textContent = isanch.length
+    comlated.textContent = comlate.length
 
-    let iscom = newArray.filter((arr) =>{
+    let uncomplet = arry.filter((arr) =>{
         return arr.isComplate == true;
     })
-    ancheck.textContent = iscom.length;
+    uncompleted.textContent = uncomplet.length;
 
     allCheck.textContent = arry.length;
 
@@ -69,36 +67,35 @@ let MainFanuc = function(arry,list){
     });
 }
 
-let formTaypes ={
-    SAVE:"save",
-    EDIT:"edit"
-}
+const lacal = JSON.parse(window.localStorage.getItem("newArray"))
+const newArray = lacal || [];
+MainFanuc(newArray, elList)
 
-let formType = formTaypes.SAVE;
-let editingId = null; 
+let idTitle = 0;
+let editingId; 
 
 elForm.addEventListener("submit", (evt) => {
     evt.preventDefault();
-    if(formType === formTaypes.SAVE){
+    if(elBtn.textContent === "Add"){
         newArray.push({
             textName: elInput.value,
             id: ++idTitle,
             isComplate: false,
         })
+        window.localStorage.setItem("newArray", JSON.stringify(newArray))
         MainFanuc(newArray, elList)
         elForm.reset();    
     }
-    
-    if(formType === formTaypes.EDIT){
+    if(elBtn.textContent === "Edit"){
         let editt = {
-            id:editingId,
             textName:elInput.value,
+            id:editingId,
+            isComleted:false,
         };
-        let editingIdFoundIndex = newArray.findIndex(nur => nur.id === editt.id);
-        
+        let editingIdFoundIndex = newArray.findIndex(todo => todo.id === editt.id);
         newArray.splice(editingIdFoundIndex, 1, editt)
+        window.localStorage.setItem("newArray", JSON.stringify(newArray))
         MainFanuc(newArray, elList);
-        formType = formTaypes.SAVE;
         elBtn.textContent = "Add";
         elForm.reset();
     }
@@ -107,25 +104,24 @@ elForm.addEventListener("submit", (evt) => {
 elList.addEventListener("click", (evt) => {
     if(evt.target.matches(".delet")){
         let deletId = Number(evt.target.dataset.id)
-        let index = newArray.findIndex(nurM => nurM.id === deletId)
+        let index = newArray.findIndex(todo => todo.id === deletId)
         newArray.splice(index, 1)
+        window.localStorage.setItem("newArray", JSON.stringify(newArray))
         MainFanuc(newArray, elList)
     }
     
     if(evt.target.matches(".idet")){
         let idetId = Number(evt.target.dataset.id);
         let idetIndex = newArray.find(nur => nur.id === idetId)
-        console.log(idetId);
         elInput.value = idetIndex.textName;
         elBtn.textContent = "Edit";
         editingId = idetIndex.id;
-        formType = formTaypes.EDIT;
     }
     if(evt.target.matches(".chekbbox-check")){
         let checkId = Number(evt.target.dataset.id);
         let checIndex = newArray.find((chek) => chek.id == checkId);
-        
         checIndex.isComplate = !checIndex.isComplate;
+        window.localStorage.setItem("newArray", JSON.stringify(newArray))
         MainFanuc(newArray, elList)
     }
     
